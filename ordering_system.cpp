@@ -9,12 +9,12 @@ MenuItem::MenuItem(std::string name, double price, int priority)
 }
 
 // creates an menu item with a name, price, and priority value and attaches a key as an identifier
-void OrderingSystem::addMenuItem(const std::string& key, const MenuItem& item) {
+void MenuSystem::addMenuItem(const std::string& key, const MenuItem& item) {
     menu_[key] = item;
 }
 
 // fetches MenuItem using its identifier (should be useful when creating orders)
-MenuItem& OrderingSystem::getMenuItem(const std::string& key) {
+MenuItem& MenuSystem::getMenuItem(const std::string& key) {
     auto index = menu_.find(key);
     if (index == menu_.end()) {
         std::cout << "Menu Item not found: " + key;
@@ -22,7 +22,7 @@ MenuItem& OrderingSystem::getMenuItem(const std::string& key) {
     return index->second; // this points to the reference that index is at and returns the MenuItem
 }
 
-void OrderingSystem::printMenu() {
+void MenuSystem::printMenu() {
     std::cout << "Menu Items: \n";
     std::cout << std::left
         << std::setw(14) << "Key"

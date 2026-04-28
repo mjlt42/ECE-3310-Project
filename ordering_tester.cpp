@@ -4,7 +4,7 @@
 
 int main() {
     // testing the menu item object/functions
-    OrderingSystem test;
+    MenuSystem test;
 
     std::cout << "Testing Menu Items: \n";
     test.addMenuItem("WATER", MenuItem("Water", 1.99, 2));
