@@ -1,0 +1,115 @@
+#include "priority_system.h"
+
+using namespace std;
+
+//This will be running when there is a new Order
+Order::Order(string name, vector<MenuItem> orderItems, int currentTime, bool driveThrough)
+    : customerName(name), items(orderItems), timeOrdered(currentTime), isDriveThrough(driveThrough){
+        //this will make priority start at 0 and add/give each item's a priority value
+
+        priority = 0;
+        for(const auto& item : items){
+            priority += item.priority;
+        }
+
+        //For now im giving drive through orders a priority of +5
+        //we can adjust it later if we need more or less
+        if (isDriveThrough){
+            priority += 5;
+        }
+    }
+    //What the following does is that it will help decide which order
+    //should be in front with the highest proirty.
+    //its using the previous integers of a anf b where a comes first(largest order/prority then the next one)
+    
+bool CompareOrders::operator()(const Order& a, const Order& b){
+
+    //What the following does is that if two orders have the same proirity
+    //it will serve the one with smaller timeOrdered tick
+
+    if (a.priority == b.priority){
+        return a.timeOrdered > b.timeOrdered;
+    }
+
+    //if there is no tie between orders it will take the highest priority
+    return a.priority < b.priority;
+}
+
+//The following is the constructor that starts the clock at tick 0
+PrioritySystem::PrioritySystem() : currentTime(0) {}
+
+//the ticks are like interger clocks that count by 1 but this can represent 1 second, 1 minute, or even 1 hour
+
+void PrioritySystem::time(){
+    currentTime++;
+    cout << "  -Time: " << currentTime << "- -\n";
+}
+
+//this will just return the current time
+int PrioritySystem::getCurrentTime(){
+    return currentTime;
+}
+
+//This will just create new orders and add it to the priority queue where the queue automatticaly sorts by priority
+void PrioritySystem::placeOrder(string customerName, vector<MenuItem> items, bool driveThrough){
+
+    //This will help create the order object where the priority will be calculated inside the Order constructor
+    Order newOrder(customerName, items, currentTime, driveThrough);
+
+    //This will push the orders into the queue
+    orderQueue.push(newOrder);
+
+    cout << "Order was placed for: " << customerName << "| Priority: " << newOrder.priority << " | Tick placed: " << currentTime;
+
+    if (driveThrough) cout << " | DRIVE-THROUGH";
+    cout << " \n";
+}
+
+//THis will serve the highest priority order on the top of the queue, and later pops it to remove it after it has been served
+
+void PrioritySystem::processNextOrder() {
+    if (orderQueue.empty()){
+        cout << "No orders to proces.\n";
+        return;
+    }
+
+    //Gets the highest riority order
+    Order next = orderQueue.top();
+    orderQueue.pop();
+
+    int waitTime = currentTime - next.timeOrdered;
+
+    cout << "\nServing: " << next.customerName << "| Priority: " <<next.priority << " | Placed at time: " << next.timeOrdered << " | Wait time: " << waitTime << " ticks\n";
+
+    cout << "  Items orderd: \n";
+    for (const auto& item : next.items){
+        cout << "  -" << item.name << " (Priority: " << item.priority << ", $" << fixed << setprecision(2) << item.price << ")\n";
+    }
+}
+
+//This will just show all the orders from highest ot lowest priority
+//I decided to try this copy queue because by iterating the original one it empties the whole queue
+
+void PrioritySystem::printQueue(){
+    if(orderQueue.empty()){
+        cout << "Queue is empty.\n";
+        return;
+    }
+
+    //this is to copy the queue so it doesnt end up emptying or destroying the original one
+    priority_queue<Order, vector<Order>, CompareOrders> tempQueue = orderQueue;
+
+    //the left and setw is a way to format the output into a table format. thats why I used the <iomanip>
+    cout << "\n-- Current Order Queue (Tick: " << currentTime << ") --\n";
+    cout << left << setw(15) << "Customer" << setw(10) << "Priority" << setw(12) << "Tick Placed" << "Drive-Thtough\n";
+    cout << string(50, '-') << "\n";
+
+    //tempQueue is a temparary queue that we get to make the copy as I said before to move around the orders and pop the orders that were served
+    while (!tempQueue.empty()){
+        Order o = tempQueue.top();
+        tempQueue.pop();
+        cout << left << setw(15) << o.customerName << setw(10) << o.priority << setw(12) << o.timeOrdered << (o.isDriveThrough ? "Yes" : "No") << "\n";
+    }
+    cout << "\n";
+}
+
