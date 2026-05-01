@@ -19,7 +19,7 @@ struct MenuItem {
 };
 //hello
 
-class OrderingSystem {
+class MenuSystem {
 private:
     // apparently this just kinda makes a hash map am i even allowed to use this?
     std::unordered_map<std::string, MenuItem> menu_;
