@@ -55,6 +55,9 @@ class PrioritySystem {
         //this will serve and move onto the next priority order from the queue
         void processNextOrder();
 
+        //this will update the priorities of each item order
+        void updateQueue();
+
         //prints the orders in the queue from highest priority to the lowest
         void printQueue();
 

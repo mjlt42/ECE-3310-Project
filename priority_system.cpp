@@ -87,6 +87,30 @@ void PrioritySystem::processNextOrder() {
     }
 }
 
+//TODO: update time waiting when simulation with time is implemented
+//TODO: fix priority rate
+void PrioritySystem::updateQueue() {
+    
+    vector<Order> tempOrders;
+
+    //Make a copy of the priority queue
+    while (!orderQueue.empty())
+    {
+        tempOrders.push_back(orderQueue.top());
+        orderQueue.pop();
+    }
+    
+    //updates the priority of each order
+    for(auto& order : tempOrders){
+            order.priority += 1; //this is an temp inflation rate; inflation rate will need to be added to struc order
+            orderQueue.push(order);
+        }
+     
+     return;
+}
+
+
+
 //This will just show all the orders from highest ot lowest priority
 //I decided to try this copy queue because by iterating the original one it empties the whole queue
 
