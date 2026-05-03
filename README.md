@@ -2,9 +2,9 @@
 Repository for storing our files for our ECE 3310 project
 
 ## Contributors
-- Osvaldo Perez
-- Frederick Kamdon
-- Matthew Lopez Tarsky
+- [Osvaldo Perez](https://github.com/OsvaldoPerez43)
+- [Frederick Kamdon](https://github.com/styrofoambowlingball)
+- [Matthew Lopez Tarsky](https://github.com/mjlt42)
 
 ## Abstract
 Our project is a Restaurant Ordering System. When a customer places an order, their order is added to the queue, and its position in the queue is determined by its priority value. The priority value of an order is determined by the predetermined priority value of each individual item (i.e. the priority value of an order is the sum of the priority value of item A, item B, etc.). The queue is arranged in order of highest priority value to lowest priority value; The queue would have to be updated in real time or periodically. There are other factors such as drivethough, time, time limit, etc. 
