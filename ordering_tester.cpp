@@ -7,6 +7,7 @@ int main() {
     MenuSystem test;
 
     std::cout << "Testing Menu Items: \n";
+    //Key, name, price, priority, priority rate
     test.addMenuItem("WATER", MenuItem("Water", 1.99, 10, 4));
     test.addMenuItem("BURGER", MenuItem("Cheeseburger", 5.99, 5, 10));
     test.addMenuItem("FRIES", MenuItem("Fries", 2.49, 10, 5));
@@ -16,10 +17,12 @@ int main() {
     
     //testing queue system
     PrioritySystem q;
-    q.placeOrder("Paul", {test.getMenuItem("FRIES"), test.getMenuItem("WATER") }, false);
+    
+    
+    q.placeOrder("Paul", {test.getMenuItem("FRIES"), test.getMenuItem("WATER") }, true);
     q.placeOrder("Noah", {test.getMenuItem("SODA"), test.getMenuItem("BURGER") }, false);
+    
     q.printQueue();
-
     q.time();
 
     q.updateQueue();
