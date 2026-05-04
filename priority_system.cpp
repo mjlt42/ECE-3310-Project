@@ -1,7 +1,7 @@
 #include "priority_system.h"
 
 using namespace std;
-
+//TODO: fix time i.e. timeOrdered should call from system time
 //This will be running when there is a new Order
 Order::Order(string name, vector<MenuItem> orderItems, int currentTime, bool driveThrough)
     : customerName(name), items(orderItems), timeOrdered(currentTime), isDriveThrough(driveThrough){
@@ -109,7 +109,7 @@ void PrioritySystem::updateQueue() {
     
     //updates the priority of each order
     for(auto& order : tempOrders){
-            order.priority +=  order.priorityRate; //this is an temp inflation rate; inflation rate will need to be added to struc order
+            order.priority +=  order.priorityRate;
             orderQueue.push(order);
         }
      

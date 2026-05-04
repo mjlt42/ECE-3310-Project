@@ -13,7 +13,7 @@ struct MenuItem {
     std::string name;
     double price;
     int priority; //priority pts
-    int priorityRate; //priority pts per min
+    int priorityRate; //priority pts per unit time
 
     MenuItem() = default;
     MenuItem(std::string name, double price, int priority, int priorityRate );
