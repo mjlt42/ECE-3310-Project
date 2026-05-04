@@ -16,6 +16,7 @@ int main() {
     //timeToComplete will be the amount of seconds the item takes to complete
 
     MenuSystem menu;
+        //Key, name, price, priority, priority rate
     menu.addMenuItem("BURGER",  MenuItem("Cheeseburger", 5.99, 10, 3, 3));
     menu.addMenuItem("FRIES",  MenuItem("Fries", 2.49, 4, 2, 1));
     menu.addMenuItem("WATER",  MenuItem("Water", 1.99, 2, 1, 1));
