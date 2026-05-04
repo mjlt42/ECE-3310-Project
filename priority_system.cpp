@@ -76,7 +76,7 @@ void PrioritySystem::placeOrder(string customerName, vector<MenuItem> items, boo
 
 void PrioritySystem::processNextOrder() {
     if (orderQueue.empty()){
-        cout << "No orders to proces.\n";
+        cout << "No orders to process.\n";
         return;
     }
 
@@ -88,7 +88,7 @@ void PrioritySystem::processNextOrder() {
 
     cout << "\nServing: " << next.customerName << "| Priority: " <<next.priority << " | Placed at time: " << next.timeOrdered << " | Wait time: " << waitTime << " ticks\n";
 
-    cout << "  Items orderd: \n";
+    cout << "  Items ordered: \n";
     for (const auto& item : next.items){
         cout << "  -" << item.name << " (Priority: " << item.priority << ", $" << fixed << setprecision(2) << item.price << ")\n";
     }
