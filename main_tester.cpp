@@ -3,185 +3,109 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include <array>
 #include <iomanip>
 
 using namespace std;
 
 int main() {
 
-    // -------------------------------------------------------
-    // Start the overall program timer
-    // -------------------------------------------------------
+    //this will start the timer
     auto programStart = chrono::steady_clock::now();
 
-    // -------------------------------------------------------
-    // Setup Menu
-    // -------------------------------------------------------
+    //This will take name, price, priority, priorityRate timeToComplete
+    //timeToComplete will be the amount of seconds the item takes to complete
+
     MenuSystem menu;
-    menu.addMenuItem("BURGER",   MenuItem("Cheeseburger", 5.99, 10, 3));
-    menu.addMenuItem("FRIES",    MenuItem("Fries",        2.49,  4, 2));
-    menu.addMenuItem("WATER",    MenuItem("Water",        1.99,  2, 1));
-    menu.addMenuItem("PIZZA",    MenuItem("Pizza",        8.99, 15, 4));
-    menu.addMenuItem("SODA",     MenuItem("Soda",         1.49,  3, 1));
-    menu.addMenuItem("SALAD",    MenuItem("Salad",        4.99,  6, 2));
-    menu.addMenuItem("ICECREAM", MenuItem("Ice Cream",    3.49, 15, 3));
+    menu.addMenuItem("BURGER",  MenuItem("Cheeseburger", 5.99, 10, 3, 3));
+    menu.addMenuItem("FRIES",  MenuItem("Fries", 2.49, 4, 2, 1));
+    menu.addMenuItem("WATER",  MenuItem("Water", 1.99, 2, 1, 1));
+    menu.addMenuItem("PIZZA",  MenuItem("Pizza", 8.99, 15, 4, 5));
+    menu.addMenuItem("SODA",  MenuItem("Soda", 1.49, 3, 1, 1));
+    menu.addMenuItem("SALAD",  MenuItem("Salad", 4.99, 6, 2, 2));
+    menu.addMenuItem("ICECREAM",  MenuItem("Ice-Cream", 3.49, 15, 3, 2));
 
     PrioritySystem ps;
 
-    // -------------------------------------------------------
-    // Arrays to store order time data
-    // -------------------------------------------------------
-    const int NUM_CUSTOMERS = 10;
+    //This will print the menu so the viewer can see whats available and their details
+    //We can delete this later if needed
+    cout <<"---Restaurant---\n\n";
+    menu.printMenu();
 
-    // Stores customer names in order they were placed
-    array<string, NUM_CUSTOMERS> customerNames = {
-        "Alice", "Bob", "Carol", "Dave", "Eve",
-        "Frank", "Grace", "Hank", "Ivy", "Jack"
-    };
+    //Just the stndard orders, we can change these add more or less
+    cout << "\n Placing orders..\n\n";
+    ps.placeOrder("Alice", {menu.getMenuItem("PIZZA"),
+                           menu.getMenuItem("SODA"),
+                           menu.getMenuItem("FRIES")}, false);
+    ps.placeOrder("Ava", {menu.getMenuItem("BURGER"),
+                           menu.getMenuItem("FRIES")}, false);
+    ps.placeOrder("Adam", {menu.getMenuItem("PIZZA")}, true);
+    ps.placeOrder("Erik", {menu.getMenuItem("ICECREAM"),
+                           menu.getMenuItem("SODA"),
+                           menu.getMenuItem("FRIES")}, false);
+    ps.placeOrder("Eve", {menu.getMenuItem("BURGER")}, true);
+    ps.placeOrder("Frank", {menu.getMenuItem("SALAD"),
+                           menu.getMenuItem("WATER")}, false);
+    ps.placeOrder("Leo", {menu.getMenuItem("BURGER"),
+                           menu.getMenuItem("PIZZA"),
+                           menu.getMenuItem("WATER")}, false);
+    ps.placeOrder("Max", {menu.getMenuItem("SALAD"),
+                           menu.getMenuItem("SODA"),
+                           menu.getMenuItem("FRIES")}, true);
+    ps.placeOrder("Jason", {menu.getMenuItem("WATER"),
+                           menu.getMenuItem("SODA")}, false);
+    ps.placeOrder("Leslie", {menu.getMenuItem("PIZZA"),
+                           menu.getMenuItem("SODA")}, true);
 
-    // orderTimes[i][0] = tick when placed
-    // orderTimes[i][1] = real seconds when placed
-    // orderTimes[i][2] = tick when served
-    // orderTimes[i][3] = real seconds when served
-    // orderTimes[i][4] = total real wait in seconds
-    array<array<int, 5>, NUM_CUSTOMERS> orderTimes = {};
-
-    // -------------------------------------------------------
-    // Place 10 prebuilt orders and record placement times
-    // -------------------------------------------------------
-    cout << "=== RESTAURANT ORDERING SYSTEM ===\n\n";
-    cout << "Loading 10 customers...\n\n";
-
-    // This is the reference point for all time measurements
-    auto simStart = chrono::steady_clock::now();
-
-    // Helper lambda to record placement time for each customer
-    // This avoids repeating the chrono code 10 times
-    auto recordPlacement = [&](int index) {
-        orderTimes[index][0] = ps.getCurrentTime();
-        orderTimes[index][1] = chrono::duration_cast<chrono::seconds>
-                               (chrono::steady_clock::now() - simStart).count();
-    };
-
-    // Place all 10 orders
-    // Priority = sum of item priorities + 5 if drive-through
-    ps.placeOrder("Alice", {menu.getMenuItem("PIZZA"),    menu.getMenuItem("SODA")},    false); // 18
-    recordPlacement(0);
-
-    ps.placeOrder("Bob",   {menu.getMenuItem("BURGER"),   menu.getMenuItem("FRIES")},   false); // 14
-    recordPlacement(1);
-
-    ps.placeOrder("Carol", {menu.getMenuItem("PIZZA")},                                 true);  // 20 w/ drive-through
-    recordPlacement(2);
-
-    ps.placeOrder("Dave",  {menu.getMenuItem("ICECREAM"), menu.getMenuItem("SODA")},    false); // 18
-    recordPlacement(3);
-
-    ps.placeOrder("Eve",   {menu.getMenuItem("BURGER")},                                true);  // 15 w/ drive-through
-    recordPlacement(4);
-
-    ps.placeOrder("Frank", {menu.getMenuItem("SALAD"),    menu.getMenuItem("WATER")},   false); // 8
-    recordPlacement(5);
-
-    ps.placeOrder("Grace", {menu.getMenuItem("FRIES"),    menu.getMenuItem("SODA")},    false); // 7
-    recordPlacement(6);
-
-    ps.placeOrder("Hank",  {menu.getMenuItem("PIZZA"),    menu.getMenuItem("BURGER")},  false); // 25
-    recordPlacement(7);
-
-    ps.placeOrder("Ivy",   {menu.getMenuItem("WATER"),    menu.getMenuItem("SODA")},    false); // 5
-    recordPlacement(8);
-
-    ps.placeOrder("Jack",  {menu.getMenuItem("WATER")},                                 false); // 2 LOWEST
-    recordPlacement(9);
-
-    // -------------------------------------------------------
-    // Show initial queue before any processing
-    // -------------------------------------------------------
-    cout << "\n=== Initial Queue (All 10 Customers) ===\n";
+    //will show the queue before proccessing the orders
+    cout << "\n---Inital Queue---\n";
     ps.printQueue();
 
-    // -------------------------------------------------------
-    // Process all 10 orders one per tick
-    // Program pauses 2 seconds per order to simulate cooking
-    // -------------------------------------------------------
-    cout << "\n=== Processing Orders ===\n";
+    //this will process all of the 10 orders(unless we change the amount) and 
+    //each item will pause depending on how big the order is
 
-    for (int i = 0; i < NUM_CUSTOMERS; i++) {
+    cout << "\n-- Processing the Orders --\n";
 
-        // Advance the integer tick clock
+    for (int i = 0; i < 10; i++){
+        //this will help advance the time(tick)
         ps.time();
 
-        // Update all priorities using each item's priorityRate
+        //updates the priorities based on the priorityRate
         ps.updateQueue();
 
-        cout << "\n[Order " << (i + 1) << " of " << NUM_CUSTOMERS << "]\n";
-        cout << "Preparing order - please wait...\n";
+        //calculates the total time to complete the order
+        int timeToComplete = 0;
+        if (!ps.getOrderQueue().empty()){
+            for(const auto& item : ps.getOrderQueue().top().items){
+                timeToComplete += item.timeToComplete;
+            }
+        }
+        cout <<"\n|Order " << (i + 1) << " of 10|";
+        cout << "Time to prepare " << timeToComplete << " second(s)\n";
 
-        // Pause 2 real seconds to simulate cooking time
-        this_thread::sleep_for(chrono::seconds(2));
+        //pause depending on the total time to complete order function
+        this_thread::sleep_for(chrono::seconds(timeToComplete));
 
-        // Record the real time this order was served
-        int servedSeconds = chrono::duration_cast<chrono::seconds>
-                           (chrono::steady_clock::now() - simStart).count();
+        //updates the current time by timeToComplete
+        for (int t = 0; t < timeToComplete - 1; t++){
+            ps.time();
+        }
 
-        // Serve the highest priority order
+        //this just serves the next order
         ps.processNextOrder();
 
-        // Store served time data in the array at index i
-        orderTimes[i][2] = ps.getCurrentTime(); // tick served
-        orderTimes[i][3] = servedSeconds;        // real seconds when served
-        orderTimes[i][4] = servedSeconds - orderTimes[i][1]; // total wait
-
-        // Show remaining queue after serving
+        //show the remaining queue
         ps.printQueue();
+
     }
 
-    // -------------------------------------------------------
-    // Print full summary table from the arrays
-    // -------------------------------------------------------
-    cout << "\n=== ORDER TIME SUMMARY ===\n";
-    cout << left
-         << setw(10) << "Customer"
-         << setw(13) << "Tick Placed"
-         << setw(13) << "Sec Placed"
-         << setw(13) << "Tick Served"
-         << setw(13) << "Sec Served"
-         << setw(13) << "Wait(secs)" << "\n";
-    cout << string(75, '-') << "\n";
-
-    // Track who waited longest
-    int longestWait = 0;
-    string longestWaitName = "";
-
-    for (int i = 0; i < NUM_CUSTOMERS; i++) {
-        cout << left
-             << setw(10) << customerNames[i]
-             << setw(13) << orderTimes[i][0]   // tick placed
-             << setw(13) << orderTimes[i][1]   // real secs placed
-             << setw(13) << orderTimes[i][2]   // tick served
-             << setw(13) << orderTimes[i][3]   // real secs served
-             << setw(13) << orderTimes[i][4]   // wait time
-             << "\n";
-
-        if (orderTimes[i][4] > longestWait) {
-            longestWait    = orderTimes[i][4];
-            longestWaitName = customerNames[i];
-        }
-    }
-
-    // -------------------------------------------------------
-    // Final results
-    // -------------------------------------------------------
+    //This gives how long the program took to run
     auto programEnd = chrono::steady_clock::now();
-    int totalRuntime = chrono::duration_cast<chrono::seconds>
-                      (programEnd - programStart).count();
+    int totalRuntime = chrono::duration_cast<chrono::seconds> (programEnd - programStart).count();
 
-    cout << "\n=== FINAL RESULTS ===\n";
-    cout << "Customer who waited longest: " << longestWaitName
-         << " | Wait: " << longestWait << " seconds\n";
-    cout << "Total program runtime:       " << totalRuntime << " seconds\n";
+    cout << "\n-- Done --";
+    cout << "Total program runtime was: " << totalRuntime << " seconds\n";
 
     return 0;
+
+
 }

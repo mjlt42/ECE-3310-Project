@@ -62,6 +62,8 @@ class PrioritySystem {
         //prints the orders in the queue from highest priority to the lowest
         void printQueue();
 
+        priority_queue<Order, vector<Order>, CompareOrders>& getOrderQueue();
+
 };
 
 

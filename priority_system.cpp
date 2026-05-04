@@ -53,7 +53,6 @@ PrioritySystem::PrioritySystem() : currentTime(0) {}
 //TODO: fix with chrono or remove?
 void PrioritySystem::time(){
     currentTime++;
-    cout << "  -Time: " << currentTime << "- -\n";
 }
 
 //this will just return the current time
@@ -121,6 +120,9 @@ void PrioritySystem::updateQueue() {
      return;
 }
 
+priority_queue<Order, vector<Order>, CompareOrders>& PrioritySystem::getOrderQueue(){
+    return orderQueue;
+}
 
 
 //This will just show all the orders from highest ot lowest priority
