@@ -14,9 +14,10 @@ struct MenuItem {
     double price;
     int priority; //priority pts
     int priorityRate; //priority pts per unit time
+    int timeToComplete;
 
     MenuItem() = default;
-    MenuItem(std::string name, double price, int priority, int priorityRate );
+    MenuItem(std::string name, double price, int priority, int priorityRate, int timeToComplete);
 };
 //hello
 

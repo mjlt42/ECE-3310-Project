@@ -4,8 +4,8 @@
 
 // menu item specific functions
 
-MenuItem::MenuItem(std::string name, double price, int priority, int priorityRate)
-    : name(name), price(price), priority(priority), priorityRate(priorityRate) {
+MenuItem::MenuItem(std::string name, double price, int priority, int priorityRate, int timeToComplete)
+    : name(name), price(price), priority(priority), priorityRate(priorityRate), timeToComplete(timeToComplete){
 }
 
 // creates an menu item with a name, price, and priority value and attaches a key as an identifier
@@ -29,15 +29,19 @@ void MenuSystem::printMenu() {
         << std::setw(20) << "Name"
         << std::setw(8) << "Price"
         << std::setw(10) <<"Priority"
-        <<"Priority Rate\n";
-    std::cout << std::string(65, '-') << "\n";
+        << std::setw(15)<<"Priority Rate"
+        <<"Time to Complete\n";
+    std::cout << std::string(75, '-') << "\n";
 
     for (const auto& [key, item] : menu_) {
         std::cout << std::left
             << std::setw(14) << key
             << std::setw(20) << item.name
             << "$" << std::setw(10) << std::fixed << std::setprecision(2) << item.price
-            << std::setw(12) << item.priority << std::setw(15) << item.priorityRate << "\n";
+            << std::setw(12) << item.priority << std::setw(15) << item.priorityRate
+            << std::setw(15) << item.timeToComplete << "\n";
+
+
     }
     std::cout << "\n";
 }

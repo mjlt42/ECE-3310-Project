@@ -22,7 +22,7 @@ struct Order{
 
     //constructor that wil help build the order
     //it also helps calculate the priority
-    Order(string name, vector<MenuItem> items, int currentTime,bool driveThrough = false);
+    Order(string name, vector<MenuItem> items, bool driveThrough = false);
 };
 
 //this helps place two orders in the priority queue
@@ -38,7 +38,7 @@ class PrioritySystem {
         priority_queue<Order, vector<Order>, CompareOrders> orderQueue;
 
         //A integer clock
-        int currentTime;
+        int currentTime;//TODO: fix with chrono or remove?
 
     public:
     //Constructor

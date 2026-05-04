@@ -3,8 +3,8 @@
 using namespace std;
 //TODO: fix time i.e. timeOrdered should call from system time
 //This will be running when there is a new Order
-Order::Order(string name, vector<MenuItem> orderItems, int currentTime, bool driveThrough)
-    : customerName(name), items(orderItems), timeOrdered(currentTime), isDriveThrough(driveThrough){
+Order::Order(string name, vector<MenuItem> orderItems,  bool driveThrough)
+    : customerName(name), items(orderItems), isDriveThrough(driveThrough){
         //this will make priority start at 0 and add/give each item's a priority value
 
         //Total priority is the sum of each item's priority
@@ -24,6 +24,8 @@ Order::Order(string name, vector<MenuItem> orderItems, int currentTime, bool dri
         if (isDriveThrough){
             priority += 5;
         }
+
+        timeOrdered = 5; //TODO: add fucntion from chrono clock using current time; place holder of 5
     }
     //What the following does is that it will help decide which order
     //should be in front with the highest proirty.
@@ -43,16 +45,19 @@ bool CompareOrders::operator()(const Order& a, const Order& b){
 }
 
 //The following is the constructor that starts the clock at tick 0
+//TODO: fix with chrono or remove?
 PrioritySystem::PrioritySystem() : currentTime(0) {}
 
 //the ticks are like interger clocks that count by 1 but this can represent 1 second, 1 minute, or even 1 hour
 
+//TODO: fix with chrono or remove?
 void PrioritySystem::time(){
     currentTime++;
     cout << "  -Time: " << currentTime << "- -\n";
 }
 
 //this will just return the current time
+//TODO: fix with chrono or remove?
 int PrioritySystem::getCurrentTime(){
     return currentTime;
 }
@@ -61,7 +66,7 @@ int PrioritySystem::getCurrentTime(){
 void PrioritySystem::placeOrder(string customerName, vector<MenuItem> items, bool driveThrough){
 
     //This will help create the order object where the priority will be calculated inside the Order constructor
-    Order newOrder(customerName, items, currentTime, driveThrough);
+    Order newOrder(customerName, items, driveThrough);
 
     //This will push the orders into the queue
     orderQueue.push(newOrder);

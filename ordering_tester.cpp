@@ -8,11 +8,11 @@ int main() {
 
     std::cout << "Testing Menu Items: \n";
     //Key, name, price, priority, priority rate
-    test.addMenuItem("WATER", MenuItem("Water", 1.99, 10, 4));
-    test.addMenuItem("BURGER", MenuItem("Cheeseburger", 5.99, 5, 10));
-    test.addMenuItem("FRIES", MenuItem("Fries", 2.49, 10, 5));
-    test.addMenuItem("SODA", MenuItem("Soda", 1.49, 10, 10));
-    test.addMenuItem("ICECREAM", MenuItem("Ice Cream", 3.49, 15, 3));
+    test.addMenuItem("WATER", MenuItem("Water", 1.99, 10, 4, 2));
+    test.addMenuItem("BURGER", MenuItem("Cheeseburger", 5.99, 5, 10, 15));
+    test.addMenuItem("FRIES", MenuItem("Fries", 2.49, 10, 5, 3));
+    test.addMenuItem("SODA", MenuItem("Soda", 1.49, 10, 10, 2));
+    test.addMenuItem("ICECREAM", MenuItem("Ice Cream", 3.49, 15, 3, 7));
     test.printMenu();
     
     //testing queue system
