@@ -17,6 +17,7 @@ struct Order{
     bool isDriveThrough;
 
     int priority;
+    int priorityRate;
     int timeOrdered;
 
     //constructor that wil help build the order

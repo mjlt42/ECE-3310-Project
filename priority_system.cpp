@@ -7,9 +7,16 @@ Order::Order(string name, vector<MenuItem> orderItems, int currentTime, bool dri
     : customerName(name), items(orderItems), timeOrdered(currentTime), isDriveThrough(driveThrough){
         //this will make priority start at 0 and add/give each item's a priority value
 
+        //Total priority is the sum of each item's priority
         priority = 0;
         for(const auto& item : items){
             priority += item.priority;
+        }
+        
+        //Total rate is the sum of each item's priority rate
+        priorityRate = 0;
+        for(const auto& item : items){
+            priorityRate += item.priorityRate;
         }
 
         //For now im giving drive through orders a priority of +5
@@ -88,7 +95,7 @@ void PrioritySystem::processNextOrder() {
 }
 
 //TODO: update time waiting when simulation with time is implemented
-//TODO: fix priority rate
+//TODO: fix priority rate 
 void PrioritySystem::updateQueue() {
     
     vector<Order> tempOrders;
@@ -102,7 +109,7 @@ void PrioritySystem::updateQueue() {
     
     //updates the priority of each order
     for(auto& order : tempOrders){
-            order.priority += 1; //this is an temp inflation rate; inflation rate will need to be added to struc order
+            order.priority +=  order.priorityRate; //this is an temp inflation rate; inflation rate will need to be added to struc order
             orderQueue.push(order);
         }
      
