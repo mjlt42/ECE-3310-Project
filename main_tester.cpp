@@ -4,6 +4,7 @@
 #include <chrono>
 #include <thread>
 #include <iomanip>
+#include <random>
 
 using namespace std;
 
@@ -11,6 +12,14 @@ int main() {
 
     //this will start the timer
     auto programStart = chrono::steady_clock::now();
+
+    std::random_device rd1;
+    std::mt19937 gen1(rd1());
+    std::uniform_int_distribution<> distr1(0, 10);
+
+    std::random_device rd2;
+    std::mt19937 gen2(rd2());
+    std::uniform_int_distribution<> distr2(0, 7);
 
     //This will take name, price, priority, priorityRate timeToComplete
     //timeToComplete will be the amount of unit time the item takes to complete
@@ -31,6 +40,16 @@ int main() {
     //We can delete this later if needed
     cout <<"---Restaurant---\n\n";
     menu.printMenu();
+
+    string names[10] ={"Alice", "Ava", "Adam", "Erik", "Eve", "Frank","Leo","Max", "Jason", "Leslie"};
+    string keys[7] = {"BURGER","FRIES","WATER","PIZZA","SODA","ICECREAM"};
+
+    int const NUMBCUSTOMER = 10;
+    for (int i = 0; i < NUMBCUSTOMER; i++){
+    ps.placeOrder("Alice", {menu.getMenuItem("PIZZA"),
+                           menu.getMenuItem("SODA"),
+                           menu.getMenuItem("FRIES")}, false);
+    }
 
     //Just the stndard orders, we can change these add more or less
     cout << "\n Placing orders..\n\n";
@@ -64,11 +83,11 @@ int main() {
     //this will process all of the 10 orders(unless we change the amount) and 
     //each item will pause depending on how big the order is
 
-
-    vector<int> timeVec;
+    
+    vector<int> timeVec{size};
     cout << "\n-- Processing the Orders --\n";
-
-    for (int i = 0; i < 10; i++){
+    int size = ps.getOrderQueue().size();
+    for (int i = 0; i < size; i++){
         
 
         //updates the priorities based on the priorityRate
@@ -85,7 +104,7 @@ int main() {
 
         //pause depending on the total time to complete order function
         this_thread::sleep_for(chrono::milliseconds(TimeToComplete));
-
+        
         //updates the current time by timeToComplete
         for (int t = 0; t < TimeToComplete ; t++){
             ps.time();
@@ -113,6 +132,7 @@ int main() {
      for(auto& time: timeVec){
             avgWaitTime += time;
         }
+    avgWaitTime = avgWaitTime/size;
     cout << "Average Wait Time: " << avgWaitTime << " milliseconds\n";
 
     return 0;
