@@ -31,6 +31,14 @@ struct CompareOrders {
     bool operator()(const Order& a, const Order& b);
 };
 
+//This will do the oldest order goes first struct
+struct CompareByTime{
+    bool operator()(const Order& a, const Order& b){
+        //This will get the smallest tick = waited longer = goes first
+        return a.timeOrdered < b.timeOrdered; 
+    }
+};
+
 //this will help manage the order queue and intger tick timer
 
 class PrioritySystem {
