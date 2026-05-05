@@ -7,34 +7,11 @@
 #include <random>
 #include <unordered_map>
 
+#include <queue>
+
 using namespace std;
 
-int main() {
-
-    //this will start the timer
-    auto programStart = chrono::steady_clock::now();
-
-    //This will take name, price, priority, priorityRate timeToComplete
-    //timeToComplete will be the amount of unit time the item takes to complete
-
-    MenuSystem menu;
-    //Key, name, price, priority, priority rate, time to complete
-    menu.addMenuItem("BURGER", MenuItem("Cheeseburger", 5.99, 10, 3, 3));
-    menu.addMenuItem("FRIES", MenuItem("Fries", 2.49, 4, 2, 1));
-    menu.addMenuItem("WATER", MenuItem("Water", 1.99, 2, 1, 1));
-    menu.addMenuItem("PIZZA", MenuItem("Pizza", 8.99, 15, 4, 5));
-    menu.addMenuItem("SODA", MenuItem("Soda", 1.49, 3, 1, 1));
-    menu.addMenuItem("SALAD", MenuItem("Salad", 4.99, 6, 2, 2));
-    menu.addMenuItem("ICECREAM", MenuItem("Ice-Cream", 3.49, 15, 3, 2));
-
-    PrioritySystem ps;
-
-    //This will print the menu so the viewer can see whats available and their details
-    //We can delete this later if needed
-    cout << "---Restaurant---\n\n";
-    menu.printMenu();
-
-    //Creates 3 random number generators 
+//Creates 3 random number generators 
     //(also i think we can just designate one device and one generator for all the random numbers instead of having 3)
     std::random_device rd1;
     std::mt19937 gen1(rd1());
@@ -52,7 +29,34 @@ int main() {
     string names[10] = { "Alice", "Ava", "Adam", "Erik", "Eve", "Frank","Leo","Max", "Jason", "Leslie" };
     string keys[7] = { "BURGER","FRIES","WATER","PIZZA","SODA","SALAD","ICECREAM" };
 
-    int const NUMBCUSTOMER = 10; //Number of customers
+
+    //This will print the menu so the viewer can see whats available and their details
+    //We can delete this later if needed
+void printMainMenu(){
+    cout << "\n";
+    cout << "---Restaurant---             \n";
+    cout << " 1. Run Simulation           \n";
+    cout << " 2. Comparison of algorithms \n";
+    cout << " 3. Exit                     \n";
+    cout << "-----------------------------\n";
+    cout << "Choose and option: ";
+}
+
+    //option 1 simulation
+    //
+
+    void runSimulation(MenuSystem& menu){
+        cout << "\n -- Simulation --\n\n";
+        //this will start the timer
+        auto programStart = chrono::steady_clock::now();
+
+        //this will print the menu
+        cout << " --Restuarant-- \n\n";
+        menu.printMenu();
+
+        PrioritySystem ps;
+
+        int const NUMBCUSTOMER = 10; //Number of customers
     unordered_map<string, bool> usedNames; //hash map of usednames (prevents duplicates)
 
     for (int i = 0; i < NUMBCUSTOMER; i++) {
@@ -77,6 +81,7 @@ int main() {
         ps.placeOrder(names[random1], orderItems, (random1 % 2 == 0));
         usedNames[names[random1]] = random1;
     }
+
 
     //Just the stndard orders, we can change these add more or less
     /*
@@ -104,6 +109,7 @@ int main() {
     ps.placeOrder("Leslie", {menu.getMenuItem("PIZZA"),
                            menu.getMenuItem("SODA")}, true);
     */
+
     //will show the queue before proccessing the orders
     cout << "\n---Initial Queue---\n";
     ps.printQueue();
@@ -155,7 +161,7 @@ int main() {
     auto programEnd = chrono::steady_clock::now();
     int totalRuntime = chrono::duration_cast<chrono::milliseconds> (programEnd - programStart).count();
 
-    cout << "\n-- Done --";
+    cout << "\n-- Done --\n";
     cout << "Total program runtime was: " << totalRuntime << " milliseconds\n";
 
     int avgWaitTime = 0;
@@ -164,6 +170,166 @@ int main() {
     }
     avgWaitTime = avgWaitTime / size;
     cout << "Average Wait Time: " << avgWaitTime << " milliseconds\n";
+}
+    //option 2 - Algoithim Comparison
+    //
+void runComparison(MenuSystem& menu){
+    cout << "\n -- Algorithm Comparison --\n";
 
+    //fixed orders this way comparison will be fair for both
+    vector<pair<string, vector<string>>> orders={
+        {"Alice", {"PIZZA", "SODA", "FRIES"}},
+        {"Ava", {"BURGER", "FRIES"}},
+        {"Adam", {"PIZZA"}},
+        {"Erik", {"ICECREAM", "SODA", "WATER"}},
+        {"Eve", {"BURGER", "SODA",}},
+        {"Frank", {"SALAD", "WATER"}},
+        {"Leo", {"FRIES", "SODA"}},
+        {"Max", {"BURGER", "PIZZA", "SODA"}},
+        {"Jason", {"WATER", "SODA"}},
+        {"Leslie", {"WATER"}}
+
+    };
+    vector<bool> driveThroughs = {false, false, true, false, true, false, false, false, true, false};
+cout << "-- Priority Queue --\n";
+PrioritySystem ps;
+
+for (int i = 0; i < 10; i++){
+    vector<MenuItem> items;
+    for (const auto& key : orders[i].second){
+        items.push_back(menu.getMenuItem(key));
+    }
+    ps.placeOrder(orders[i].first, items, driveThroughs[i]);
+}
+vector<string> priorityOrder;
+vector<int> PWait;
+vector<int> PPriority;
+int pqTick = 0;
+
+while (!ps.getOrderQueue().empty()){
+    ps.updateQueue(1);
+    pqTick++;
+    
+    Order next = ps.getOrderQueue().top();
+    int waitTime = pqTick - next.timeOrdered;
+
+    priorityOrder.push_back(next.customerName);
+    PWait.push_back(waitTime);
+    PPriority.push_back(next.priority);
+
+    ps.processNextOrder();
+}
+//This is the normal Priority
+cout<<" -- Normal Priority Queue --\n";
+queue<Order> NormalQueue;
+
+for (int i = 0; i < 10; i++){
+    vector<MenuItem> items;
+    for (const auto& key : orders[i].second){
+        items.push_back(menu.getMenuItem(key));
+    }
+    NormalQueue.push(Order(orders[i].first, items, driveThroughs[i]));
+}
+
+vector<string> normalOrder;
+vector<int> NormalWaits;
+vector<int> NormalPriorities;
+int normalPos = 0;
+
+while (!NormalQueue.empty()){
+    Order next = NormalQueue.front();
+    NormalQueue.pop();
+
+    normalOrder.push_back(next.customerName);
+    NormalWaits.push_back(normalPos);
+    NormalPriorities.push_back(next.priority);
+    normalPos++;
+}
+//This will be the side by side table
+cout << "\n == Comparison Side-by-Side ==\n";
+cout << left <<setw(5) << "Position" << setw(12) << "Priority Queue Name" << setw(10) << "Priority Queue priority" << setw(10) << "Priority Queue Wait" << setw(12) << "Normal Name" << setw(10) << "Normal Priority" << setw(10) << "Normal Wait" << "\n";
+cout << string(69, '-') << "\n";
+
+for (int i = 0; i < 10; i++){
+    cout << left << setw(5) << (i + 1) << setw(12) << priorityOrder[i] << setw(10) << PPriority[i] << setw(10) << PWait[i] << setw(12) << normalOrder[i] << setw(10) << NormalPriorities[i] << setw(10) << NormalWaits[i] << "\n";
+}
+
+//Summary of the results
+double pqAvg = 0, normalAvg = 0;
+int pqMax = 0, normalMax = 0;
+string pqMaxName, normalMaxName;
+for (int i = 0; i < 10; i++){
+    pqAvg += PWait[i];
+    normalAvg += NormalWaits[i];
+    if(PWait[i] > pqMax){
+        pqMax = PWait[i];
+        pqMaxName = priorityOrder[i];
+    }
+    if(NormalWaits[i] > normalMax){
+        normalMax = NormalWaits[i];
+        normalMaxName = normalOrder[i];
+    }
+}
+pqAvg /= 10;
+normalAvg /= 10;
+
+cout <<"\n --Summary-- \n";
+cout << left << setw(22) << "" << setw(18) << "Priority Queue" << setw(18) <<" Normal Queue" << "\n";
+cout << string(58, '-') << "\n";
+
+cout << left << setw(22) << "Avg wait time: " << setw(18) << pqAvg << setw(18) << normalAvg << "\n";
+
+cout << left << setw(22) << "Longest Wait: " << setw(18) << (pqMaxName + "(" + to_string(pqMax) + ")") << setw(18) << (normalMaxName + "(" + to_string(normalMax) + ")") << "\n";
+
+cout << left << setw(22) << "First Served: " << setw(18) << priorityOrder[0] << setw(18) << normalOrder[0] << "\n";
+
+cout << left << setw(22) << "Last Served: " << setw(18) << priorityOrder[9] << setw(18) << normalOrder[9] << "\n";
+
+cout << "\n --Conclusion-- \n";
+cout << "Priority queue first served: " << priorityOrder[0] << " (priority: " << PPriority[0] <<" pts)\n";
+cout << "Normal Queue first served:  " << normalOrder[0] << " (arrived first without priority) \n\n";
+cout << "Priority Queue serves high value\n";
+cout << "and drive-through orders first.\n";
+cout << "Normal treats orders equally without high value of priority\n";
+
+
+
+}
+
+int main() {
+
+    //This will take name, price, priority, priorityRate timeToComplete
+    //timeToComplete will be the amount of unit time the item takes to complete
+
+    MenuSystem menu;
+    //Key, name, price, priority, priority rate, time to complete
+    menu.addMenuItem("BURGER", MenuItem("Cheeseburger", 5.99, 10, 3, 3));
+    menu.addMenuItem("FRIES", MenuItem("Fries", 2.49, 4, 2, 1));
+    menu.addMenuItem("WATER", MenuItem("Water", 1.99, 2, 1, 1));
+    menu.addMenuItem("PIZZA", MenuItem("Pizza", 8.99, 15, 4, 5));
+    menu.addMenuItem("SODA", MenuItem("Soda", 1.49, 3, 1, 1));
+    menu.addMenuItem("SALAD", MenuItem("Salad", 4.99, 6, 2, 2));
+    menu.addMenuItem("ICECREAM", MenuItem("Ice-Cream", 3.49, 15, 3, 2));
+
+    int choice = 0;
+    while (choice !=3){
+        printMainMenu();
+        cin >> choice;
+
+        switch (choice){
+            case 1:
+                runSimulation(menu);
+                break;
+            case 2:
+                runComparison(menu);
+                break;
+            case 3:
+                cout << "\nClosing System BYE\n";
+                break;
+            default:
+                cout << "Invalid option. Choose either 1, 2, or 3\n";
+                break;
+        }
+    }
     return 0;
 }
