@@ -13,10 +13,10 @@ int main() {
     auto programStart = chrono::steady_clock::now();
 
     //This will take name, price, priority, priorityRate timeToComplete
-    //timeToComplete will be the amount of seconds the item takes to complete
+    //timeToComplete will be the amount of unit time the item takes to complete
 
     MenuSystem menu;
-        //Key, name, price, priority, priority rate
+        //Key, name, price, priority, priority rate, time to complete
     menu.addMenuItem("BURGER",  MenuItem("Cheeseburger", 5.99, 10, 3, 3));
     menu.addMenuItem("FRIES",  MenuItem("Fries", 2.49, 4, 2, 1));
     menu.addMenuItem("WATER",  MenuItem("Water", 1.99, 2, 1, 1));
@@ -64,35 +64,38 @@ int main() {
     //this will process all of the 10 orders(unless we change the amount) and 
     //each item will pause depending on how big the order is
 
+
+    vector<int> timeVec;
     cout << "\n-- Processing the Orders --\n";
 
     for (int i = 0; i < 10; i++){
-        //this will help advance the time(tick)
-        ps.time();
+        
 
         //updates the priorities based on the priorityRate
-        ps.updateQueue();
+        
+        if (i != 0) ps.updateQueue(timeVec[i-1]);
 
         //calculates the total time to complete the order
-        int timeToComplete = 0;
+        int TimeToComplete = 0;
         if (!ps.getOrderQueue().empty()){
-            for(const auto& item : ps.getOrderQueue().top().items){
-                timeToComplete += item.timeToComplete;
-            }
+            TimeToComplete = ps.getOrderQueue().top().timeToComplete;
         }
-        cout <<"\n|Order " << (i + 1) << " of 10|";
-        cout << "Time to prepare " << timeToComplete << " second(s)\n";
+        std::cout <<"\n|Order " << (i + 1) << " of 10|";
+        cout << "Time to prepare " << TimeToComplete << " milliseconds(s)\n";
 
         //pause depending on the total time to complete order function
-        this_thread::sleep_for(chrono::seconds(timeToComplete));
+        this_thread::sleep_for(chrono::milliseconds(TimeToComplete));
 
         //updates the current time by timeToComplete
-        for (int t = 0; t < timeToComplete - 1; t++){
+        for (int t = 0; t < TimeToComplete ; t++){
             ps.time();
         }
 
+        //appends the the waittime for each order into a vector
+        timeVec.push_back(ps.getCurrentTime() - ps.getOrderQueue().top().timeOrdered);
         //this just serves the next order
         ps.processNextOrder();
+
 
         //show the remaining queue
         ps.printQueue();
@@ -101,12 +104,18 @@ int main() {
 
     //This gives how long the program took to run
     auto programEnd = chrono::steady_clock::now();
-    int totalRuntime = chrono::duration_cast<chrono::seconds> (programEnd - programStart).count();
+    int totalRuntime = chrono::duration_cast<chrono::milliseconds> (programEnd - programStart).count();
 
     cout << "\n-- Done --";
-    cout << "Total program runtime was: " << totalRuntime << " seconds\n";
+    cout << "Total program runtime was: " << totalRuntime << " milliseconds\n";
+
+    int avgWaitTime = 0;
+     for(auto& time: timeVec){
+            avgWaitTime += time;
+        }
+    cout << "Average Wait Time: " << avgWaitTime << " milliseconds\n";
 
     return 0;
 
-
+    
 }

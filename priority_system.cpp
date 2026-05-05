@@ -8,29 +8,29 @@ Order::Order(string name, vector<MenuItem> orderItems,  bool driveThrough)
         //this will make priority start at 0 and add/give each item's a priority value
 
         //Total priority is the sum of each item's priority
+        //Total rate is the sum of each item's priority rate
+        //Total time to complete is the sum of each item's time to complete
         priority = 0;
+        priorityRate = 0;
+        timeToComplete = 0;
         for(const auto& item : items){
             priority += item.priority;
+            priorityRate += item.priorityRate;
+            timeToComplete += item.timeToComplete;
         }
         
-        //Total rate is the sum of each item's priority rate
-        priorityRate = 0;
-        for(const auto& item : items){
-            priorityRate += item.priorityRate;
-        }
-
         //For now im giving drive through orders a priority of +5
         //we can adjust it later if we need more or less
         if (isDriveThrough){
             priority += 5;
         }
-
-        timeOrdered = 5; //TODO: add fucntion from chrono clock using current time; place holder of 5
+        
+        timeOrdered = 0; //TODO: add fucntion from chrono clock using current time; place holder of 5
     }
+    
     //What the following does is that it will help decide which order
     //should be in front with the highest proirty.
-    //its using the previous integers of a anf b where a comes first(largest order/prority then the next one)
-    
+    //its using the previous integers of a anf b where a comes first(largest order/prority then the next one)  
 bool CompareOrders::operator()(const Order& a, const Order& b){
 
     //What the following does is that if two orders have the same proirity
@@ -46,8 +46,7 @@ bool CompareOrders::operator()(const Order& a, const Order& b){
 
 //The following is the constructor that starts the clock at tick 0
 //TODO: fix with chrono or remove?
-PrioritySystem::PrioritySystem() : currentTime(0) {}
-
+PrioritySystem::PrioritySystem() : currentTime{0} {}
 //the ticks are like interger clocks that count by 1 but this can represent 1 second, 1 minute, or even 1 hour
 
 //TODO: fix with chrono or remove?
@@ -78,7 +77,7 @@ void PrioritySystem::placeOrder(string customerName, vector<MenuItem> items, boo
 
 //THis will serve the highest priority order on the top of the queue, and later pops it to remove it after it has been served
 
-void PrioritySystem::processNextOrder() {
+void PrioritySystem:: processNextOrder() {
     if (orderQueue.empty()){
         cout << "No orders to process.\n";
         return;
@@ -100,7 +99,7 @@ void PrioritySystem::processNextOrder() {
 
 //TODO: update time waiting when simulation with time is implemented
 //TODO: fix priority rate 
-void PrioritySystem::updateQueue() {
+void PrioritySystem::updateQueue(int deltaTime) {
     
     vector<Order> tempOrders;
 
@@ -113,7 +112,7 @@ void PrioritySystem::updateQueue() {
     
     //updates the priority of each order
     for(auto& order : tempOrders){
-            order.priority +=  order.priorityRate;
+            order.priority +=  order.priorityRate * deltaTime;
             orderQueue.push(order);
         }
      

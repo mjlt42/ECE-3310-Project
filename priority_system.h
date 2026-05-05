@@ -18,6 +18,7 @@ struct Order{
 
     int priority;
     int priorityRate;
+    int timeToComplete;
     int timeOrdered;
 
     //constructor that wil help build the order
@@ -57,7 +58,7 @@ class PrioritySystem {
         void processNextOrder();
 
         //this will update the priorities of each item order
-        void updateQueue();
+        void updateQueue(int deltaTime);
 
         //prints the orders in the queue from highest priority to the lowest
         void printQueue();
