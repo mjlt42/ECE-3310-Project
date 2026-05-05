@@ -26,19 +26,19 @@ void MenuSystem::printMenu() {
     std::cout << "Menu Items: \n";
     std::cout << std::left
         << std::setw(14) << "Key"
-        << std::setw(20) << "Name"
+        << std::setw(17) << "Name"
         << std::setw(8) << "Price"
         << std::setw(10) <<"Priority"
         << std::setw(15)<<"Priority Rate"
         <<"Time to Complete\n";
-    std::cout << std::string(75, '-') << "\n";
+    std::cout << std::string(80, '-') << "\n";
 
     for (const auto& [key, item] : menu_) {
         std::cout << std::left
             << std::setw(14) << key
-            << std::setw(20) << item.name
+            << std::setw(17) << item.name
             << "$" << std::setw(10) << std::fixed << std::setprecision(2) << item.price
-            << std::setw(12) << item.priority << std::setw(15) << item.priorityRate
+            << std::setw(14) << item.priority << std::setw(15) << item.priorityRate
             << std::setw(15) << item.timeToComplete << "\n";
 
 
