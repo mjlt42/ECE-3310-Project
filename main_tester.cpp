@@ -5,6 +5,7 @@
 #include <thread>
 #include <iomanip>
 #include <random>
+#include <unordered_map>
 
 using namespace std;
 
@@ -12,14 +13,6 @@ int main() {
 
     //this will start the timer
     auto programStart = chrono::steady_clock::now();
-
-    std::random_device rd1;
-    std::mt19937 gen1(rd1());
-    std::uniform_int_distribution<> distr1(0, 10);
-
-    std::random_device rd2;
-    std::mt19937 gen2(rd2());
-    std::uniform_int_distribution<> distr2(0, 7);
 
     //This will take name, price, priority, priorityRate timeToComplete
     //timeToComplete will be the amount of unit time the item takes to complete
@@ -41,17 +34,37 @@ int main() {
     cout <<"---Restaurant---\n\n";
     menu.printMenu();
 
-    string names[10] ={"Alice", "Ava", "Adam", "Erik", "Eve", "Frank","Leo","Max", "Jason", "Leslie"};
-    string keys[7] = {"BURGER","FRIES","WATER","PIZZA","SODA","ICECREAM"};
+    //Creates 2 random number generators
+    std::random_device rd1;
+    std::mt19937 gen1(rd1());
+    std::uniform_int_distribution<> distr1(0, 9);
 
-    int const NUMBCUSTOMER = 10;
+    std::random_device rd2;
+    std::mt19937 gen2(rd2());
+    std::uniform_int_distribution<> distr2(0, 6);
+
+    //Stores names and keys in arrays
+    string names[10] ={"Alice", "Ava", "Adam", "Erik", "Eve", "Frank","Leo","Max", "Jason", "Leslie"};
+    string keys[7] = {"BURGER","FRIES","WATER","PIZZA","SODA","SALAD","ICECREAM"};
+
+    int const NUMBCUSTOMER = 10; //Number of customers
+    unordered_map<string, bool> usedNames; //hash map of usednames (prevents duplicates)
+    
     for (int i = 0; i < NUMBCUSTOMER; i++){
-    ps.placeOrder("Alice", {menu.getMenuItem("PIZZA"),
-                           menu.getMenuItem("SODA"),
-                           menu.getMenuItem("FRIES")}, false);
+    int random1 = distr1(gen1);
+    int random2 = distr2(gen2);
+
+    while (usedNames.contains(names[random1]))//Checks if name has been used
+    {
+        random1 = distr1(gen1);
+    }
+    //Places order and randomly picks drivethrough
+    ps.placeOrder(names[random1], {menu.getMenuItem(keys[random2])}, (random1%2 == 0));
+    usedNames[names[random1]] = random1;
     }
 
     //Just the stndard orders, we can change these add more or less
+    /*
     cout << "\n Placing orders..\n\n";
     ps.placeOrder("Alice", {menu.getMenuItem("PIZZA"),
                            menu.getMenuItem("SODA"),
@@ -75,18 +88,18 @@ int main() {
                            menu.getMenuItem("SODA")}, false);
     ps.placeOrder("Leslie", {menu.getMenuItem("PIZZA"),
                            menu.getMenuItem("SODA")}, true);
-
+    */
     //will show the queue before proccessing the orders
     cout << "\n---Inital Queue---\n";
     ps.printQueue();
-
+    
     //this will process all of the 10 orders(unless we change the amount) and 
     //each item will pause depending on how big the order is
 
-    
+    int size = ps.getOrderQueue().size();
     vector<int> timeVec{size};
     cout << "\n-- Processing the Orders --\n";
-    int size = ps.getOrderQueue().size();
+
     for (int i = 0; i < size; i++){
         
 
@@ -114,7 +127,8 @@ int main() {
         timeVec.push_back(ps.getCurrentTime() - ps.getOrderQueue().top().timeOrdered);
         //this just serves the next order
         ps.processNextOrder();
-
+        //TODO: work in progress, added to make it seem like a customer can order at random
+        if (distr1(gen1) == 1) ps.placeOrder(names[distr1(gen1)], {menu.getMenuItem(keys[distr2(gen2)])}, (distr1(gen1)%2 == 0));
 
         //show the remaining queue
         ps.printQueue();
