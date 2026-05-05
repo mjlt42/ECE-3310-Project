@@ -126,7 +126,7 @@ priority_queue<Order, vector<Order>, CompareOrders>& PrioritySystem::getOrderQue
 }
 
 
-//This will just show all the orders from highest ot lowest priority
+//This will just show all the orders from highest to lowest priority
 //I decided to try this copy queue because by iterating the original one it empties the whole queue
 
 void PrioritySystem::printQueue() {
