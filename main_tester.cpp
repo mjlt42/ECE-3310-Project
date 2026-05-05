@@ -100,19 +100,20 @@ int main() {
     vector<int> timeVec{size};
     cout << "\n-- Processing the Orders --\n";
 
-    for (int i = 0; i < size; i++){
+    int count = 0;
+    while (!ps.getOrderQueue().empty()){
         
 
         //updates the priorities based on the priorityRate
         
-        if (i != 0) ps.updateQueue(timeVec[i-1]);
+        if (count != 0) ps.updateQueue(timeVec[count-1]);
 
         //calculates the total time to complete the order
         int TimeToComplete = 0;
         if (!ps.getOrderQueue().empty()){
             TimeToComplete = ps.getOrderQueue().top().timeToComplete;
         }
-        std::cout <<"\n|Order " << (i + 1) << " of 10|";
+        std::cout <<"\n|Order " << (count + 1) <<"|" <<endl;
         cout << "Time to prepare " << TimeToComplete << " milliseconds(s)\n";
 
         //pause depending on the total time to complete order function
@@ -132,7 +133,7 @@ int main() {
 
         //show the remaining queue
         ps.printQueue();
-
+        count++;
     }
 
     //This gives how long the program took to run
@@ -150,6 +151,4 @@ int main() {
     cout << "Average Wait Time: " << avgWaitTime << " milliseconds\n";
 
     return 0;
-
-    
 }
