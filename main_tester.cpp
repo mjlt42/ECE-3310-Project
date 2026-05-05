@@ -113,8 +113,8 @@ int main() {
         if (!ps.getOrderQueue().empty()){
             TimeToComplete = ps.getOrderQueue().top().timeToComplete;
         }
-        std::cout <<"\n|Order " << (count + 1) <<"|" <<endl;
-        cout << "Time to prepare " << TimeToComplete << " milliseconds(s)\n";
+        std::cout <<"\n|Order " << (count + 1) <<"| " <<endl;
+        cout << "Time to prepare " << TimeToComplete << " millisecond(s)\n";
 
         //pause depending on the total time to complete order function
         this_thread::sleep_for(chrono::milliseconds(TimeToComplete));

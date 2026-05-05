@@ -69,7 +69,7 @@ void PrioritySystem::placeOrder(string customerName, vector<MenuItem> items, boo
     //This will push the orders into the queue
     orderQueue.push(newOrder);
 
-    cout << "Order was placed for: " << customerName << "| Priority: " << newOrder.priority << " | Tick placed: " << currentTime;
+    cout << "Order was placed for: " << customerName << " | Priority: " << newOrder.priority << " | Tick placed: " << currentTime;
 
     if (driveThrough) cout << " | DRIVE-THROUGH";
     cout << " \n";
@@ -89,7 +89,7 @@ void PrioritySystem:: processNextOrder() {
 
     int waitTime = currentTime - next.timeOrdered;
 
-    cout << "\nServing: " << next.customerName << "| Priority: " <<next.priority << " | Placed at time: " << next.timeOrdered << " | Wait time: " << waitTime << " ticks\n";
+    cout << "\nServing: " << next.customerName << " | Priority: " <<next.priority << " | Placed at time: " << next.timeOrdered << " | Wait time: " << waitTime << " ticks\n";
 
     cout << "  Items ordered: \n";
     for (const auto& item : next.items){
@@ -138,7 +138,7 @@ void PrioritySystem::printQueue(){
 
     //the left and setw is a way to format the output into a table format. thats why I used the <iomanip>
     cout << "\n-- Current Order Queue (Tick: " << currentTime << ") --\n";
-    cout << left << setw(15) << "Customer" << setw(10) << "Priority" << setw(12) << "Tick Placed" << "Drive-Thtough\n";
+    cout << left << setw(15) << "Customer" << setw(10) << "Priority" << setw(12) << "Tick Placed" << "Drive-Through\n";
     cout << string(50, '-') << "\n";
 
     //tempQueue is a temparary queue that we get to make the copy as I said before to move around the orders and pop the orders that were served
