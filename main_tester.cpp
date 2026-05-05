@@ -172,40 +172,54 @@ void printMainMenu(){
     avgWaitTime = avgWaitTime / size;
     cout << "Average Wait Time: " << avgWaitTime << " milliseconds\n";
 }
+
+
     //option 2 - Algoithim Comparison
-    //
+
 void runComparison(MenuSystem& menu){
     cout << "\n -- Algorithm Comparison --\n";
-
-    //fixed orders this way comparison will be fair for both
-    vector<pair<string, vector<string>>> orders={
-        {"Alice", {"PIZZA", "SODA", "FRIES"}},
-        {"Ava", {"BURGER", "FRIES"}},
-        {"Adam", {"PIZZA"}},
-        {"Erik", {"ICECREAM", "SODA", "WATER"}},
-        {"Eve", {"BURGER", "SODA",}},
-        {"Frank", {"SALAD", "WATER"}},
-        {"Leo", {"FRIES", "SODA"}},
-        {"Max", {"BURGER", "PIZZA", "SODA"}},
-        {"Jason", {"WATER", "SODA"}},
-        {"Leslie", {"WATER"}}
-
-    };
-    vector<bool> driveThroughs = {false, false, true, false, true, false, false, false, true, false};
-cout << "-- Priority Queue --\n";
 PrioritySystem ps;
+queue<Order> NormalQueue;
 
-for (int i = 0; i < 10; i++){
-    vector<MenuItem> items;
-    for (const auto& key : orders[i].second){
-        items.push_back(menu.getMenuItem(key));
+int const NUMBCUSTOMER = 10;
+unordered_map<string, bool> usedNames;
+int tick = 0;
+
+//this generates orders and adds to the queues
+for (int i = 0; i < NUMBCUSTOMER; i++){
+    int random1 = distr1(gen1);
+    int itemCount = itemCountDist(gen3);
+    vector<MenuItem> orderItems;
+
+    while(usedNames.contains(names[random1])){
+        random1 = distr1(gen1);
     }
-    ps.placeOrder(orders[i].first, items, driveThroughs[i]);
+
+    for(int j = 0; j < itemCount; j++){
+        int randomKeyIndex = distr2(gen2);
+        orderItems.push_back(menu.getMenuItem(keys[randomKeyIndex]));
+    }
+
+    bool isDriveThrough = (random1 % 2 == 0);
+
+    //place into priority Queue
+    ps.placeOrder(names[random1], orderItems, isDriveThrough);
+    ps.time();
+
+    Order o(names[random1], orderItems, isDriveThrough);
+    o.timeOrdered = tick;
+    NormalQueue.push(o);
+
+    usedNames[names[random1]] = true;
+    tick++;
 }
+    
+cout << "-- Priority Queue --\n";
 vector<string> priorityOrder;
 vector<int> PWait;
 vector<int> PPriority;
-int pqTick = 0;
+
+int pqTick = tick;
 
 while (!ps.getOrderQueue().empty()){
     ps.updateQueue(1);
@@ -222,30 +236,25 @@ while (!ps.getOrderQueue().empty()){
 }
 //This is the normal Priority
 cout<<" -- Normal Priority Queue --\n";
-queue<Order> NormalQueue;
-
-for (int i = 0; i < 10; i++){
-    vector<MenuItem> items;
-    for (const auto& key : orders[i].second){
-        items.push_back(menu.getMenuItem(key));
-    }
-    NormalQueue.push(Order(orders[i].first, items, driveThroughs[i]));
-}
 
 vector<string> normalOrder;
 vector<int> NormalWaits;
 vector<int> NormalPriorities;
-int normalPos = 0;
+
+int normalTick = tick;
 
 while (!NormalQueue.empty()){
+    normalTick ++;
     Order next = NormalQueue.front();
     NormalQueue.pop();
 
+    int waitTime = normalTick - next.timeOrdered;
+
     normalOrder.push_back(next.customerName);
-    NormalWaits.push_back(normalPos);
+    NormalWaits.push_back(waitTime);
     NormalPriorities.push_back(next.priority);
-    normalPos++;
 }
+
 //This will be the side by side table
 cout << "\n == Comparison Side-by-Side ==\n";
 cout << left <<setw(5) << "Position" << setw(12) << "Priority Queue Name" << setw(10) << "Priority Queue priority" << setw(10) << "Priority Queue Wait" << setw(12) << "Normal Name" << setw(10) << "Normal Priority" << setw(10) << "Normal Wait" << "\n";
@@ -258,7 +267,9 @@ for (int i = 0; i < 10; i++){
 //Summary of the results
 double pqAvg = 0, normalAvg = 0;
 int pqMax = 0, normalMax = 0;
+
 string pqMaxName, normalMaxName;
+
 for (int i = 0; i < 10; i++){
     pqAvg += PWait[i];
     normalAvg += NormalWaits[i];
@@ -286,12 +297,10 @@ cout << left << setw(22) << "First Served: " << setw(18) << priorityOrder[0] << 
 
 cout << left << setw(22) << "Last Served: " << setw(18) << priorityOrder[9] << setw(18) << normalOrder[9] << "\n";
 
-cout << "\n --Conclusion-- \n";
+cout << "\n\n";
 cout << "Priority queue first served: " << priorityOrder[0] << " (priority: " << PPriority[0] <<" pts)\n";
 cout << "Normal Queue first served:  " << normalOrder[0] << " (arrived first without priority) \n\n";
-cout << "Priority Queue serves high value\n";
-cout << "and drive-through orders first.\n";
-cout << "Normal treats orders equally without high value of priority\n";
+
 
 
 
@@ -303,38 +312,55 @@ void runOldestFirst(MenuSystem& menu){
     cout << "\n -- Oldest Orders First Algorithm --\n";
     cout<< "Comparing Priority Algorithm vs oldest Orders First";
 
-    //fixed orders this way comparison will be fair for both
-    vector<pair<string, vector<string>>> orders={
-        {"Alice", {"PIZZA", "SODA", "FRIES"}},
-        {"Ava", {"BURGER", "FRIES"}},
-        {"Adam", {"PIZZA"}},
-        {"Erik", {"ICECREAM", "SODA", "WATER"}},
-        {"Eve", {"BURGER", "SODA",}},
-        {"Frank", {"SALAD", "WATER"}},
-        {"Leo", {"FRIES", "SODA"}},
-        {"Max", {"BURGER", "PIZZA", "SODA"}},
-        {"Jason", {"WATER", "SODA"}},
-        {"Leslie", {"WATER"}}
+    //Generate Random orders
+    int const NUMBCUSTOMER = 10;
+    unordered_map<string, bool> usedNames;
 
+    //this creates a temporary struct to hold our random generated data
+    struct GeneratedOrder{
+        string name;
+        vector<MenuItem> items;
+        bool isDriveThrough;
     };
-    vector<bool> driveThroughs = {false, false, true, false, true, false, false, false, true, false};
+    vector<GeneratedOrder> randomOrders;
 
+    for(int i = 0; i < NUMBCUSTOMER; i++){
+        int random1 = distr1(gen1);
+        //checks for duplicates
+        while(usedNames.contains(names[random1])){
+            random1 = distr1(gen1);
+        }
+        string customerName = names[random1];
+        usedNames[customerName]=true;
+
+        //generates random items for this order
+        int itemCount = itemCountDist(gen3);
+        vector<MenuItem> orderItems;
+        for (int j = 0; j < itemCount; j++){
+            int randomKeyIndex = distr2(gen2);
+            orderItems.push_back(menu.getMenuItem(keys[randomKeyIndex]));
+        }
+
+        //randomizes the drivethrough
+        bool isDriveThrough = (distr1(gen1) % 2== 0);
+
+        //saves the order to our list
+        randomOrders.push_back({customerName, orderItems, isDriveThrough});
+    }
+
+ 
 cout << "-- Priority Queue --\n";
 PrioritySystem ps1;
 
-for (int i = 0; i < 10; i++){
-    vector<MenuItem> items;
-    for (const auto& key : orders[i].second){
-        items.push_back(menu.getMenuItem(key));
-    }
-    ps1.placeOrder(orders[i].first, items, driveThroughs[i]);
+for (int i = 0; i < NUMBCUSTOMER; i++){
+    ps1.placeOrder(randomOrders[i].name, randomOrders[i].items, randomOrders[i].isDriveThrough);
     //each order will be placed at 1 tick apart
     ps1.time(); 
 }
 vector<string> P1Order;
 vector<int> P1Wait;
 vector<int> P1priority;
-int P1Tick = 0;
+int P1Tick = NUMBCUSTOMER;
 
 while (!ps1.getOrderQueue().empty()){
     ps1.updateQueue(1);
@@ -354,12 +380,8 @@ cout<<" -- Oldest Orders First--\n";
 priority_queue<Order, vector<Order>, CompareByTime> timeQueue;
 int tick = 0;
 
-for (int i = 0; i < 10; i++){
-    vector<MenuItem> items;
-    for (const auto& key : orders[i].second){
-        items.push_back(menu.getMenuItem(key));
-    }
-    Order o(orders[i].first, items, driveThroughs[i]);
+for (int i = 0; i < NUMBCUSTOMER; i++){
+    Order o(randomOrders[i].name, randomOrders[i].items, randomOrders[i].isDriveThrough);
     //manually sets the tick so they differ
     o.timeOrdered = tick;
     timeQueue.push(o);
@@ -369,7 +391,8 @@ for (int i = 0; i < 10; i++){
 vector<string> timeOrder;
 vector<int> timeWaits;
 vector<int> timePriorities;
-int timeTick = 0;
+
+int timeTick = tick;
 
 while (!timeQueue.empty()){
     timeTick++;
@@ -387,18 +410,18 @@ cout << "\n == Comparison Side-by-Side ==\n";
 cout << left <<setw(5) << "Position" << setw(12) << "Priority Queue Name" << setw(10) << "Priority Pts" << setw(10) << "Priority Queue Wait" << setw(12) << "Time Queue Name" << setw(10) << "Time Queue" << setw(10) << "Time Wait" << "\n";
 cout << string(69, '-') << "\n";
 
-for (int i = 0; i < 10; i++){
+for (int i = 0; i < NUMBCUSTOMER; i++){
     cout << left << setw(5) << (i + 1) << setw(12) << P1Order[i] << setw(10) << P1priority[i] << setw(10) << P1Wait[i] << setw(12) << timeOrder[i] << setw(10) << timePriorities[i] << setw(10) << timeWaits[i] << "\n";
 }
 
 //Summary of the results
 double p1Avg = 0, timeAvg = 0;
-for (int i = 0; i < 10; i++){
+for (int i = 0; i < NUMBCUSTOMER; i++){
     p1Avg += P1Wait[i];
     timeAvg += timeWaits[i];
 }
-p1Avg /= 10;
-timeAvg /= 10;
+p1Avg /= NUMBCUSTOMER;
+timeAvg /= NUMBCUSTOMER;
 
 cout <<"\n --Summary-- \n";
 cout << left << setw(22) << "" << setw(18) << "Priority Queue" << setw(18) <<" Oldest-First" << "\n";
@@ -410,12 +433,9 @@ cout << left << setw(22) << "First Served: " << setw(18) << P1Order[0] << setw(1
 
 cout << left << setw(22) << "Last Served: " << setw(18) << P1Order[9] << setw(18) << timeOrder[9] << "\n";
 
-cout << "\n --Conclusion-- \n";
+cout << "\n\n";
 cout << "Priority queue first served: " << P1Order[0] << " (priority: " << P1priority[0] <<" pts)\n";
 cout << "Oldest First Queue first served:  " << timeOrder[0] << " (arrived first, priority: " << timePriorities[0] << "pts) \n\n";
-cout << "Priority Queue serves high value\n";
-cout << "and drive-through orders first.\n";
-cout << "Oldest-First Algorithm that is fairer on wait time but ignores orders values\n";
 
 
 
