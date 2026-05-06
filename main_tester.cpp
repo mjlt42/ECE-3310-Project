@@ -118,8 +118,8 @@ void printMainMenu(){
     //this will process all of the 10 orders(unless we change the amount) and 
     //each item will pause depending on how big the order is
 
-    int size = ps.getOrderQueue().size();
-    vector<int> timeVec{ size };
+    int sizeIN = ps.getOrderQueue().size();
+    vector<int> timeVec{ sizeIN };
     cout << "\n-- Processing the Orders --\n";
 
     int count = 0;
@@ -151,8 +151,11 @@ void printMainMenu(){
         //this just serves the next order
         ps.processNextOrder();
         //TODO: work in progress, added to make it seem like a customer can order at random
-        if (distr1(gen1) == 1) ps.placeOrder(names[distr1(gen1)], { menu.getMenuItem(keys[distr2(gen2)]) }, (distr1(gen1) % 2 == 0));
-
+        if (distr1(gen1) == 1) {
+          ps.placeOrder(names[distr1(gen1)], { menu.getMenuItem(keys[distr2(gen2)]) }, (distr1(gen1) % 2 == 0));
+          sizeIN++; 
+        }
+        
         //show the remaining queue
         ps.printQueue();
         count++;
@@ -169,7 +172,7 @@ void printMainMenu(){
     for (auto& time : timeVec) {
         avgWaitTime += time;
     }
-    avgWaitTime = avgWaitTime / size;
+    avgWaitTime = avgWaitTime / sizeIN;
     cout << "Average Wait Time: " << avgWaitTime << " milliseconds\n";
 }
 
@@ -323,7 +326,7 @@ void runOldestFirst(MenuSystem& menu){
         bool isDriveThrough;
     };
     vector<GeneratedOrder> randomOrders;
-
+    
     for(int i = 0; i < NUMBCUSTOMER; i++){
         int random1 = distr1(gen1);
         //checks for duplicates
