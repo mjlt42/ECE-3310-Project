@@ -84,33 +84,7 @@ void printMainMenu(){
     }
 
 
-    //Just the stndard orders, we can change these add more or less
-    /*
-    cout << "\n Placing orders..\n\n";
-    ps.placeOrder("Alice", {menu.getMenuItem("PIZZA"),
-                           menu.getMenuItem("SODA"),
-                           menu.getMenuItem("FRIES")}, false);
-    ps.placeOrder("Ava", {menu.getMenuItem("BURGER"),
-                           menu.getMenuItem("FRIES")}, false);
-    ps.placeOrder("Adam", {menu.getMenuItem("PIZZA")}, true);
-    ps.placeOrder("Erik", {menu.getMenuItem("ICECREAM"),
-                           menu.getMenuItem("SODA"),
-                           menu.getMenuItem("FRIES")}, false);
-    ps.placeOrder("Eve", {menu.getMenuItem("BURGER")}, true);
-    ps.placeOrder("Frank", {menu.getMenuItem("SALAD"),
-                           menu.getMenuItem("WATER")}, false);
-    ps.placeOrder("Leo", {menu.getMenuItem("BURGER"),
-                           menu.getMenuItem("PIZZA"),
-                           menu.getMenuItem("WATER")}, false);
-    ps.placeOrder("Max", {menu.getMenuItem("SALAD"),
-                           menu.getMenuItem("SODA"),
-                           menu.getMenuItem("FRIES")}, true);
-    ps.placeOrder("Jason", {menu.getMenuItem("WATER"),
-                           menu.getMenuItem("SODA")}, false);
-    ps.placeOrder("Leslie", {menu.getMenuItem("PIZZA"),
-                           menu.getMenuItem("SODA")}, true);
-    */
-
+   
     //will show the queue before proccessing the orders
     cout << "\n---Initial Queue---\n";
     ps.printQueue();
@@ -128,7 +102,6 @@ void printMainMenu(){
 
         //updates the priorities based on the priorityRate
 
-        if (count != 0) ps.updateQueue(timeVec[count - 1]);
 
         //calculates the total time to complete the order
         int TimeToComplete = 0;
@@ -149,6 +122,7 @@ void printMainMenu(){
         //appends the the waittime for each order into a vector
         timeVec.push_back(ps.getCurrentTime() - ps.getOrderQueue().top().timeOrdered);
         //this just serves the next order
+        if (count != 0) ps.updateQueue(TimeToComplete);
         ps.processNextOrder();
         //TODO: work in progress, added to make it seem like a customer can order at random
         if (distr1(gen1) == 1) {
