@@ -191,6 +191,8 @@ int tick = 0;
 //this generates orders and adds to the queues
 for (int i = 0; i < NUMBCUSTOMER; i++){
     int random1 = distr1(gen1);
+
+    //randomly chooses food for the order
     int itemCount = itemCountDist(gen3);
     vector<MenuItem> orderItems;
 
@@ -225,18 +227,22 @@ vector<int> PPriority;
 int pqTick = tick;
 
 while (!ps.getOrderQueue().empty()){
-    ps.updateQueue(1);
-    pqTick++;
-    
     Order next = ps.getOrderQueue().top();
+
+    ps.processNextOrder();
+
+    ps.updateQueue(next.timeToComplete);
+
+    pqTick+= next.timeToComplete;
+
     int waitTime = pqTick - next.timeOrdered;
 
     priorityOrder.push_back(next.customerName);
     PWait.push_back(waitTime);
     PPriority.push_back(next.priority);
 
-    ps.processNextOrder();
 }
+// random order
 //This is the normal Priority
 cout<<" -- Normal Priority Queue --\n";
 
@@ -247,9 +253,10 @@ vector<int> NormalPriorities;
 int normalTick = tick;
 
 while (!NormalQueue.empty()){
-    normalTick ++;
     Order next = NormalQueue.front();
     NormalQueue.pop();
+
+    normalTick += next.timeToComplete;
 
     int waitTime = normalTick - next.timeOrdered;
 
@@ -366,10 +373,12 @@ vector<int> P1priority;
 int P1Tick = NUMBCUSTOMER;
 
 while (!ps1.getOrderQueue().empty()){
-    ps1.updateQueue(1);
-    P1Tick++;
-    
     Order next = ps1.getOrderQueue().top();
+
+    ps1.updateQueue(next.timeToComplete);
+    //increment clock by prep time of meal
+    P1Tick+= next.timeToComplete;
+    
     int waitTime = P1Tick - next.timeOrdered;
 
     P1Order.push_back(next.customerName);
@@ -398,11 +407,13 @@ vector<int> timePriorities;
 int timeTick = tick;
 
 while (!timeQueue.empty()){
-    timeTick++;
     Order next = timeQueue.top();
     timeQueue.pop();
+    //increments clock by prep time
+    timeTick+= next.timeToComplete;
 
     int waitTime = timeTick - next.timeOrdered;
+    
     timeOrder.push_back(next.customerName);
     timeWaits.push_back(waitTime);
     timePriorities.push_back(next.priority);
