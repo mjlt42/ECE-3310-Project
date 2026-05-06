@@ -247,7 +247,7 @@ vector<string> normalOrder;
 vector<int> NormalWaits;
 vector<int> NormalPriorities;
 
-int normalTick = tick;
+int normalTick = pqTick;
 
 while (!NormalQueue.empty()){
     Order next = NormalQueue.front();
@@ -430,7 +430,7 @@ vector<string> timeOrder;
 vector<int> timeWaits;
 vector<int> timePriorities;
 
-int timeTick = tick;
+int timeTick = P1Tick;
 
 while (!timeQueue.empty()){
     Order next = timeQueue.top();
