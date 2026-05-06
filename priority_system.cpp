@@ -116,8 +116,8 @@ void PrioritySystem::updateQueue(int deltaTime) {
     //updates the priority of each order
     for (auto& order : tempOrders) {
         order.priority += order.priorityRate * deltaTime;
-        orderQueue.push(order);
     }
+    orderQueue = priority_queue<Order, vector<Order>, CompareOrders>(tempOrders.begin(), tempOrders.end());
 
     return;
 }
