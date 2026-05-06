@@ -264,11 +264,11 @@ int resultSize = min(priorityOrder.size(), normalOrder.size());
 
 //This will be the side by side table
 cout << "\n == Comparison Side-by-Side ==\n";
-cout << left <<setw(5) << "Position" << setw(12) << "Priority Queue Name" << setw(10) << "Priority Queue priority" << setw(10) << "Priority Queue Wait" << setw(12) << "Normal Name" << setw(10) << "Normal Priority" << setw(10) << "Normal Wait" << "\n";
-cout << string(69, '-') << "\n";
+cout << left <<setw(10) << "Position" << setw(10) << "PQ Name" << setw(12) << "PQ Priority" << setw(10) << "PQ Wait |" << setw(12) << "Normal Name" << setw(16) << "Normal Priority" << setw(10) << "Normal Wait" << "\n";
+cout << string(40, '-') << "|" << string(40, '-') << "\n";
 
 for (int i = 0; i < resultSize; i++){
-    cout << left << setw(5) << (i + 1) << setw(12) << priorityOrder[i] << setw(10) << PPriority[i] << setw(10) << PWait[i] << setw(12) << normalOrder[i] << setw(10) << NormalPriorities[i] << setw(10) << NormalWaits[i] << "\n";
+    cout << left << setw(10) << (i + 1) << setw(10) << priorityOrder[i] << setw(12) << PPriority[i] << setw(8) << PWait[i] << "| " << setw(12) << normalOrder[i] << setw(16) << NormalPriorities[i] << setw(10) << NormalWaits[i] << "\n";
 }
 
 //Summary of the results
@@ -446,11 +446,11 @@ int resultSize = min(P1Order.size(), timeOrder.size());
 
 //This will be the side by side table
 cout << "\n == Comparison Side-by-Side ==\n";
-cout << left <<setw(5) << "Position" << setw(12) << "Priority Queue Name" << setw(10) << "Priority Pts" << setw(10) << "Priority Queue Wait" << setw(12) << "Time Queue Name" << setw(10) << "Time Queue" << setw(10) << "Time Wait" << "\n";
-cout << string(69, '-') << "\n";
+cout << left <<setw(10) << "Position" << setw(10) << "PQ Name" << setw(12) << "PQ Priority" << setw(10) << "PQ Wait |" << setw(12) << "FCFS Name" << setw(16) << "FCFS Priority" << setw(10) << "FCFS Wait" << "\n";
+cout << string(40, '-') << "|" << string(40, '-') << "\n";
 
 for (int i = 0; i < resultSize; i++){
-    cout << left << setw(5) << (i + 1) << setw(12) << P1Order[i] << setw(10) << P1priority[i] << setw(10) << P1Wait[i] << setw(12) << timeOrder[i] << setw(10) << timePriorities[i] << setw(10) << timeWaits[i] << "\n";
+    cout << left << setw(10) << (i + 1) << setw(10) << P1Order[i] << setw(12) << P1priority[i] << setw(8) << P1Wait[i] << "| " << setw(12) << timeOrder[i] << setw(16) << timePriorities[i] << setw(10) << timeWaits[i] << "\n";
 }
 
 //Summary of the results
