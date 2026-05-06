@@ -38,7 +38,7 @@ void printMainMenu(){
     cout << " 3. Oldest Orders First      \n";
     cout << " 4. Exit                      \n";
     cout << "-----------------------------\n";
-    cout << "Choose and option: ";
+    cout << "Choose an option: ";
 }
 
     //option 1 simulation
@@ -153,6 +153,7 @@ void printMainMenu(){
 void runComparison(MenuSystem& menu){
     auto start = chrono::steady_clock::now();
     cout << "\n -- Algorithm Comparison --\n";
+    cout << " -- Comparing Priority Queue to Normal Queue --\n";
 PrioritySystem ps;
 queue<Order> NormalQueue;
 
@@ -320,7 +321,7 @@ cout << "Total comparison runtime: " << runtime << " milliseconds \n";
 void runOldestFirst(MenuSystem& menu){
     auto start = chrono::steady_clock::now();
     cout << "\n -- Oldest Orders First Algorithm --\n";
-    cout<< "Comparing Priority Algorithm vs oldest Orders First";
+    cout<< " -- Comparing Priority Algorithm vs oldest Orders First --\n";
 
     //Generate Random orders
     int const NUMBCUSTOMER = 10;
@@ -358,8 +359,6 @@ void runOldestFirst(MenuSystem& menu){
         randomOrders.push_back({customerName, orderItems, isDriveThrough});
     }
 
- 
-cout << "-- Priority Queue --\n";
 PrioritySystem ps1;
 
 for (int i = 0; i < NUMBCUSTOMER; i++){
@@ -383,6 +382,7 @@ for (int i = 0; i < NUMBCUSTOMER; i++){
     tick++;
 }
 
+cout << "\n-- Priority Queue --\n";
 
 while (!ps1.getOrderQueue().empty()){
     Order next = ps1.getOrderQueue().top();
