@@ -12,6 +12,7 @@ Our project is a Restaurant Ordering System. When a customer places an order, th
 For the data structures we would use, we can use a priority queue, since a normal queue can not be sorted based on a value. The queue handles an order object, which will store the order details (items, name, time placed, etc.) Also, we can use a dictionary/hash table to store the menu items (along with the priority values, priority inflation rates, etc.) Finally, we suspect we might have to refine or change how we determine the priority and how it changes based on testing.
 
 ## UML Diagram
+<img width="1016" height="810" alt="image" src="https://github.com/user-attachments/assets/57a30841-51f9-43f0-a013-9f5beefd214d" />
 
 ## Work Divisions
 We will be dividing the project in three sections, one will work on the priority system, the list/queue, and the hash table. 
