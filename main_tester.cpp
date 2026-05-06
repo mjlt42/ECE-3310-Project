@@ -238,6 +238,8 @@ while (!ps.getOrderQueue().empty()){
 
     int waitTime = pqTick - next.timeOrdered;
 
+    this_thread::sleep_for(chrono::milliseconds(next.timeToComplete));
+
     priorityOrder.push_back(next.customerName);
     PWait.push_back(waitTime);
     PPriority.push_back(next.priority);
@@ -260,6 +262,7 @@ while (!NormalQueue.empty()){
     normalTick += next.timeToComplete;
 
     int waitTime = normalTick - next.timeOrdered;
+    this_thread::sleep_for(chrono::milliseconds(next.timeToComplete));
 
     normalOrder.push_back(next.customerName);
     NormalWaits.push_back(waitTime);
@@ -385,6 +388,7 @@ while (!ps1.getOrderQueue().empty()){
     P1Tick+= next.timeToComplete;
     
     int waitTime = P1Tick - next.timeOrdered;
+    this_thread::sleep_for(chrono::milliseconds(next.timeToComplete));
 
     P1Order.push_back(next.customerName);
     P1Wait.push_back(waitTime);
@@ -418,6 +422,7 @@ while (!timeQueue.empty()){
     timeTick+= next.timeToComplete;
 
     int waitTime = timeTick - next.timeOrdered;
+    this_thread::sleep_for(chrono::milliseconds(next.timeToComplete));
 
     timeOrder.push_back(next.customerName);
     timeWaits.push_back(waitTime);
