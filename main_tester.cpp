@@ -180,6 +180,7 @@ void printMainMenu(){
     //option 2 - Algoithim Comparison
 
 void runComparison(MenuSystem& menu){
+    auto start = chrono::steady_clock::now();
     cout << "\n -- Algorithm Comparison --\n";
 PrioritySystem ps;
 queue<Order> NormalQueue;
@@ -311,7 +312,10 @@ cout << "\n\n";
 cout << "Priority queue first served: " << priorityOrder[0] << " (priority: " << PPriority[0] <<" pts)\n";
 cout << "Normal Queue first served:  " << normalOrder[0] << " (arrived first without priority) \n\n";
 
-
+auto end = chrono::steady_clock::now();
+int runtime = chrono::duration_cast<chrono::milliseconds> (end-start).count();
+//we can change this I just left it in milliseconds for now
+cout << "Total comparison runtime: " << runtime << " milliseconds \n";
 
 
 }
@@ -319,6 +323,7 @@ cout << "Normal Queue first served:  " << normalOrder[0] << " (arrived first wit
 //The follwoing will be for comparing priority vs oldest orders first
 
 void runOldestFirst(MenuSystem& menu){
+    auto start = chrono::steady_clock::now();
     cout << "\n -- Oldest Orders First Algorithm --\n";
     cout<< "Comparing Priority Algorithm vs oldest Orders First";
 
@@ -375,7 +380,7 @@ int P1Tick = NUMBCUSTOMER;
 while (!ps1.getOrderQueue().empty()){
     Order next = ps1.getOrderQueue().top();
 
-    ps1.updateQueue(next.timeToComplete);
+    ps1.updateQueue(1);
     //increment clock by prep time of meal
     P1Tick+= next.timeToComplete;
     
@@ -413,7 +418,7 @@ while (!timeQueue.empty()){
     timeTick+= next.timeToComplete;
 
     int waitTime = timeTick - next.timeOrdered;
-    
+
     timeOrder.push_back(next.customerName);
     timeWaits.push_back(waitTime);
     timePriorities.push_back(next.priority);
@@ -451,7 +456,10 @@ cout << "\n\n";
 cout << "Priority queue first served: " << P1Order[0] << " (priority: " << P1priority[0] <<" pts)\n";
 cout << "Oldest First Queue first served:  " << timeOrder[0] << " (arrived first, priority: " << timePriorities[0] << "pts) \n\n";
 
-
+auto end = chrono::steady_clock::now();
+//same thing here we can change it later
+int runtime = chrono::duration_cast<chrono::milliseconds>(end-start).count();
+cout << "Total comparison runtime: " <<runtime << " milliseconds\n";
 
 }
 

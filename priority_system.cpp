@@ -65,6 +65,7 @@ void PrioritySystem::placeOrder(string customerName, vector<MenuItem> items, boo
 
     //This will help create the order object where the priority will be calculated inside the Order constructor
     Order newOrder(customerName, items, driveThrough);
+    newOrder.timeOrdered = currentTime;
 
     //This will push the orders into the queue
     orderQueue.push(newOrder);
