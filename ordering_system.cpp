@@ -13,7 +13,7 @@ void MenuSystem::addMenuItem(const std::string& key, const MenuItem& item) {
     menu_[key] = item;
 }
 
-// fetches MenuItem using its identifier (should be useful when creating orders)
+// fetches MenuItem using its identifier
 MenuItem& MenuSystem::getMenuItem(const std::string& key) {
     auto index = menu_.find(key);
     if (index == menu_.end()) {

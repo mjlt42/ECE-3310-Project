@@ -47,7 +47,7 @@ class PrioritySystem {
         priority_queue<Order, vector<Order>, CompareOrders> orderQueue;
 
         //A integer clock
-        int currentTime;//TODO: fix with chrono or remove?
+        int currentTime;
 
     public:
     //Constructor
@@ -71,6 +71,7 @@ class PrioritySystem {
         //prints the orders in the queue from highest priority to the lowest
         void printQueue();
 
+        //returns the order queue
         priority_queue<Order, vector<Order>, CompareOrders>& getOrderQueue();
 
 };

@@ -1,7 +1,6 @@
 #include "priority_system.h"
 
 using namespace std;
-//TODO: fix time i.e. timeOrdered should call from system time
 //This will be running when there is a new Order
 Order::Order(string name, vector<MenuItem> orderItems, bool driveThrough)
     : customerName(name), items(orderItems), isDriveThrough(driveThrough) {
@@ -19,13 +18,13 @@ Order::Order(string name, vector<MenuItem> orderItems, bool driveThrough)
         timeToComplete += item.timeToComplete;
     }
 
-    //For now im giving drive through orders a priority of +5
-    //we can adjust it later if we need more or less
+
+    //Priority bias can be adjusted
     if (isDriveThrough) {
         priority += 5;
     }
 
-    timeOrdered = 0; //TODO: add fucntion from chrono clock using current time; place holder of 5
+    timeOrdered = 0;
 }
 
 //What the following does is that it will help decide which order
@@ -45,17 +44,15 @@ bool CompareOrders::operator()(const Order& a, const Order& b) {
 }
 
 //The following is the constructor that starts the clock at tick 0
-//TODO: fix with chrono or remove?
 PrioritySystem::PrioritySystem() : currentTime{ 0 } {}
 //the ticks are like interger clocks that count by 1 but this can represent 1 second, 1 minute, or even 1 hour
 
-//TODO: fix with chrono or remove?
+
 void PrioritySystem::time() {
     currentTime++;
 }
 
 //this will just return the current time
-//TODO: fix with chrono or remove?
 int PrioritySystem::getCurrentTime() {
     return currentTime;
 }
@@ -100,8 +97,7 @@ void PrioritySystem::processNextOrder() {
     }
 }
 
-//TODO: update time waiting when simulation with time is implemented
-//TODO: fix priority rate 
+
 void PrioritySystem::updateQueue(int deltaTime) {
 
     vector<Order> tempOrders;
@@ -128,7 +124,6 @@ priority_queue<Order, vector<Order>, CompareOrders>& PrioritySystem::getOrderQue
 
 
 //This will just show all the orders from highest to lowest priority
-//I decided to try this copy queue because by iterating the original one it empties the whole queue
 
 void PrioritySystem::printQueue() {
     if (orderQueue.empty()) {
@@ -139,12 +134,12 @@ void PrioritySystem::printQueue() {
     //this is to copy the queue so it doesnt end up emptying or destroying the original one
     priority_queue<Order, vector<Order>, CompareOrders> tempQueue = orderQueue;
 
-    //the left and setw is a way to format the output into a table format. thats why I used the <iomanip>
+    //setw is a way to format the output into a table format.
     cout << "\n-- Current Order Queue (Tick: " << currentTime << ") --\n";
     cout << left << setw(15) << "Customer" << setw(10) << "Priority" << setw(12) << "Tick Placed" << "Drive-Through\n";
     cout << string(50, '-') << "\n";
 
-    //tempQueue is a temparary queue that we get to make the copy as I said before to move around the orders and pop the orders that were served
+  
     while (!tempQueue.empty()) {
         Order o = tempQueue.top();
         tempQueue.pop();

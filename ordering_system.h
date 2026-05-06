@@ -19,11 +19,9 @@ struct MenuItem {
     MenuItem() = default;
     MenuItem(std::string name, double price, int priority, int priorityRate, int timeToComplete);
 };
-//hello
 
 class MenuSystem {
 private:
-    // apparently this just kinda makes a hash map am i even allowed to use this?
     std::unordered_map<std::string, MenuItem> menu_;
 public:
     void addMenuItem(const std::string& key, const MenuItem& item);

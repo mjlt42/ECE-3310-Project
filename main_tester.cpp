@@ -12,7 +12,6 @@
 using namespace std;
 
 //Creates 3 random number generators 
-    //(also i think we can just designate one device and one generator for all the random numbers instead of having 3)
     std::random_device rd1;
     std::mt19937 gen1(rd1());
     std::uniform_int_distribution<> distr1(0, 14);
@@ -31,7 +30,6 @@ using namespace std;
 
 
     //This will print the menu so the viewer can see whats available and their details
-    //We can delete this later if needed
 void printMainMenu(){
     cout << "\n";
     cout << "---Restaurant---             \n";
@@ -124,7 +122,6 @@ void printMainMenu(){
         //this just serves the next order
         if (count != 0) ps.updateQueue(TimeToComplete);
         ps.processNextOrder();
-        //TODO: work in progress, added to make it seem like a customer can order at random
         if (distr1(gen1) == 1) {
           ps.placeOrder(names[distr1(gen1)], { menu.getMenuItem(keys[distr2(gen2)]) }, (distr1(gen1) % 2 == 0));
           sizeIN++; 
@@ -313,7 +310,6 @@ cout << "Normal Queue first served:  " << normalOrder[0] << " (arrived first wit
 
 auto end = chrono::steady_clock::now();
 int runtime = chrono::duration_cast<chrono::milliseconds> (end-start).count();
-//we can change this I just left it in milliseconds for now
 cout << "Total comparison runtime: " << runtime << " milliseconds \n";
 
 
@@ -481,7 +477,6 @@ cout << "Priority queue first served: " << P1Order[0] << " (priority: " << P1pri
 cout << "Oldest First Queue first served:  " << timeOrder[0] << " (arrived first, priority: " << timePriorities[0] << "pts) \n\n";
 
 auto end = chrono::steady_clock::now();
-//same thing here we can change it later
 int runtime = chrono::duration_cast<chrono::milliseconds>(end-start).count();
 cout << "Total comparison runtime: " <<runtime << " milliseconds\n";
 
